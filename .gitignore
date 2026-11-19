@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+highscores.json
+highscores.tmp
+ghost_hunter.db
+ghost_hunter.db-journal
+ghost_hunter.db.damaged

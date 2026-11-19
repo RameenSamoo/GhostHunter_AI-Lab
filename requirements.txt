@@ -1,0 +1,4 @@
+# pygame-ce: community edition of pygame. Same `import pygame`, and it ships
+# ready-made Windows builds for Python 3.14 (original pygame stops at 3.13).
+pygame-ce>=2.5.8
+numpy>=1.26

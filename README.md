@@ -49,7 +49,7 @@ pip install pytest
 python -m pytest
 ```
 
-100 tests cover the CSP constraints, A* optimality, HMM correctness, scoring,
+129 tests cover the CSP constraints, A* optimality, HMM correctness, scoring,
 high scores, real-time rules (catch, swap, cooldowns, pause), every VS rule
 (blocking, spawns, Sir Nadeem's speed limit and information limits, both match
 types, leaderboards) and headless UI runs.
@@ -88,12 +88,12 @@ After **Play**, pick a mode, then a difficulty.
 
 ### Difficulties
 
-| Tier | Grid | Ghost moves every | Walls | Flicker every | Multiplier |
-|---|---|---|---|---|---|
-| Beginner | 8×8 | 1.0 s | 10% | 5–8 s | ×1.0 |
-| Intermediate | 12×12 | 0.8 s | 15% | 7–10 s | ×1.5 |
-| Professional | 18×18 | 0.6 s | 18% | 9–13 s | ×2.0 |
-| Expert | 25×25 | 0.4 s | 20% | 11–16 s | ×3.0 |
+| Tier | Grid | Ghost moves every | Walls | Flicker every | Multiplier | Sir Nadeem speed |
+|---|---|---|---|---|---|---|
+| Beginner | 8×8 | 1.0 s | 10% | 5–8 s | ×1.0 | 5.00 cells/s |
+| Intermediate | 12×12 | 0.8 s | 15% | 7–10 s | ×1.5 | 5.33 cells/s |
+| Professional | 18×18 | 0.6 s | 18% | 9–13 s | ×2.0 | 5.66 cells/s |
+| Expert | 25×25 | 0.4 s | 20% | 11–16 s | ×3.0 | 6.00 cells/s |
 
 ### Scoring
 
@@ -209,7 +209,7 @@ cycle every frame, built only from the concepts above:
 
 **Same rules as you:**
 - Walls block it, and it moves up/down/left/right only.
-- Its step timer works exactly like your held arrow key: at most 6 cells/s. Tests check it is never faster than the keyboard at any frame rate.
+- Its step timer works like your held arrow key, but its top speed depends on the difficulty: 5.00, 5.33, 5.66 and 6.00 cells/s from Beginner to Expert. Your held key gives 6 cells/s, so he is never faster than you. Tests check this at any frame rate.
 - It never sees the ghost's true position outside flickers, gets no benefit from your radar, and never uses the radar or hints.
 
 **PEAS:**
@@ -221,14 +221,14 @@ cycle every frame, built only from the concepts above:
 | **Actuators** | 4 moves |
 | **Sensors** | Own position, own noisy reading, flickers, other hunter's cell |
 
-**Measured performance** (50 games per difficulty, playing alone):
+**Measured performance** (100 games per difficulty, playing alone, at the speeds above):
 
 | Difficulty | Caught | Median time | Median moves | Median score |
 |---|---|---|---|---|
-| Beginner | 50/50 | 2.2 s | 14 | 9,610 |
-| Intermediate | 50/50 | 2.7 s | 17 | 14,288 |
-| Professional | 50/50 | 4.0 s | 25 | 18,600 |
-| Expert | 50/50 | 5.3 s | 32 | 27,262 |
+| Beginner | 100/100 | 2.62 s | 14 | 9,590 |
+| Intermediate | 100/100 | 3.22 s | 18 | 14,220 |
+| Professional | 100/100 | 4.27 s | 25 | 18,570 |
+| Expert | 100/100 | 5.35 s | 33 | 27,225 |
 
 ---
 

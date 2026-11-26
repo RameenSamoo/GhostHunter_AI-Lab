@@ -100,12 +100,16 @@ _RESULT_INSERT = ("INSERT INTO results (game_id, hunter, player_id, name, score,
 def connect(path: Path) -> sqlite3.Connection:
     """Open (or create) the database, enable foreign keys, apply the schema."""
     conn = sqlite3.connect(str(path))
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")
-    with conn:
-        conn.executescript(SCHEMA)
-        conn.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
-    return conn
+    try:
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys = ON")
+        with conn:
+            conn.executescript(SCHEMA)
+            conn.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
+        return conn
+    except Exception:
+        conn.close()
+        raise
 
 
 class HighScoreTable:

@@ -80,10 +80,19 @@ class GridEnvironment:
         self.hunters[0] = cell
 
     # -- Ghost model -------------------------------------------------------
-    def ghost_next_cell(self) -> Cell:
-        """The ghost always moves: uniform choice among open neighbours."""
-        options = self.grid.neighbors[self.grid.index[self.ghost]]
-        return self.grid.cells[self.rng.choice(options)]
+    def ghost_next_cell(self, blocked: set[Cell] | None = None) -> Cell:
+        """The ghost moves uniformly among open neighbours not occupied by an active hunter."""
+        options = [
+            self.grid.cells[idx]
+            for idx in self.grid.neighbors[self.grid.index[self.ghost]]
+        ]
+        if blocked:
+            safe = [cell for cell in options if cell not in blocked]
+            if safe:
+                options = safe
+            else:
+                return self.ghost
+        return self.rng.choice(options)
 
     # -- Sensor model ------------------------------------------------------
     def sense(self, i: int = 0) -> int:
@@ -132,7 +141,8 @@ class GridEnvironment:
             moved[i] = True
             claimed.add(target)
 
-        new_ghost = self.ghost_next_cell() if ghost_tick else self.ghost
+        active_hunters = {new[i] for i in range(n) if active[i]}
+        new_ghost = self.ghost_next_cell(active_hunters) if ghost_tick else self.ghost
         self.hunters = new
         self.ghost = new_ghost
         caught = [active[i] and new[i] == new_ghost for i in range(n)]

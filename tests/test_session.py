@@ -53,12 +53,21 @@ def test_hunter_landing_on_ghost_catches():
     assert s.caught and s.score is not None and s.moves == 1
 
 
-def test_ghost_stepping_onto_hunter_catches():
-    # Dead end: ghost at (0,7) has exactly one neighbour, (0,6), where the hunter stands.
+def test_ghost_avoids_stationary_hunter_in_dead_end():
+    # Dead end: ghost at (0,7) has only neighbour (0,6), where the hunter stands.
     s = make_session(corridor_level((0, 6), (0, 7)))
     s.ghost_timer = BEGINNER.ghost_interval
     s.update(0.016)
-    assert s.caught and s.moves == 0
+    assert not s.caught and s.env.ghost == (0, 7) and s.moves == 0
+
+
+def test_ghost_avoids_stationary_hunter_when_other_moves_exist():
+    # Corridor: ghost at (0,5) has neighbours (0,4) [hunter] and (0,6) [open].
+    for seed in range(20):
+        s = make_session(corridor_level((0, 4), (0, 5)), seed=seed)
+        s.ghost_timer = BEGINNER.ghost_interval
+        s.update(0.016)
+        assert not s.caught and s.env.ghost == (0, 6)
 
 
 def test_walls_block_without_counting_a_move():
